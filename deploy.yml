@@ -1,0 +1,72 @@
+name: Deploy Andalight
+
+on:
+  push:
+    branches: [develop, main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-build
+          path: dist/
+          retention-days: 1
+
+  deploy-dev:
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-build
+          path: dist/
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_DEV }}
+          aws-region: eu-west-1
+
+      - name: Sync a S3 dev
+        run: aws s3 sync dist/ s3://andalight-s3-immune-dev --delete
+
+      - name: Invalidar CloudFront dev
+        run: aws cloudfront create-invalidation --distribution-id E2F1HTT6V3DCHG --paths "/*"
+
+  deploy-prod:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-build
+          path: dist/
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
+          aws-region: eu-west-1
+
+      - name: Sync a S3 prod
+        run: aws s3 sync dist/ s3://andalight-s3-immune-poc --delete
+
+      - name: Invalidar CloudFront prod
+        run: aws cloudfront create-invalidation --distribution-id E2X1TYAMQFV2JK --paths "/*"
