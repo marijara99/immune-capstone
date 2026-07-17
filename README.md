@@ -59,7 +59,7 @@ Athena (tabla Glue, **partition projection**) sobre los logs de CloudFront → r
 
 ## Deploy.yml
 
-- Se adjunta también el archivo .yml desde la que se publica la web estática y sus reglas
+- Se adjunta también el archivo .yml desde la que se publica la web estática y sus reglas. No funciona desde aquí. Simplemente sirve para reflejar cómo se ha orquestado la pipeline y los secretos para gestionar el flow de trabajo en el repositorio real.
 
 ## Notas adicionales
 
@@ -68,8 +68,8 @@ Athena (tabla Glue, **partition projection**) sobre los logs de CloudFront → r
 
 ## Vídeos
 
-<video controls src="Grabacion arquitectura.mov" title="Arquitectura"></video>
+[Arquitectura](https://drive.google.com/file/d/1qTgCI6AldN8mTKEzo9RDXVW1Fzm6OdES/view?usp=drive_link)
 
-<video controls src="Grabacion consola.mov" title="Consola"></video>
+[Consola](https://drive.google.com/file/d/1NxdpgdmR0G57iGsiN9LNI0lKyPypzGOA/view?usp=drive_link)
 
-<video controls src="Grabacion web.mov" title="Web"></video>
+[Web](https://drive.google.com/file/d/1RWixRZPrvduJEQ_-35FtDwCW2TNdKF9t/view?usp=drive_link)
